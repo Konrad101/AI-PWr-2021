@@ -40,7 +40,7 @@ def roulette_operator(population):
         if population.index(individual) == len(population) - 1:
             higher_value = 1
         else:
-            higher_value = last_individual_quality + (population_values[individual] / overall_sum)
+            higher_value = last_individual_quality + (1 - (population_values[individual] / overall_sum))
         population_brackets[individual] = (lower_value, higher_value)
         last_individual_quality = higher_value
 
