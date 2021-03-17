@@ -1,0 +1,14 @@
+
+geneticAlgorithm/firstStage/.idea/
+
+geneticAlgorithm/firstStage/__pycache__/
+
+geneticAlgorithm/firstStage/board/__pycache__/
+
+geneticAlgorithm/firstStage/generator/__pycache__/
+
+geneticAlgorithm/firstStage/populations/
+
+geneticAlgorithm/firstStage/venv/
+
+geneticAlgorithm/firstStage/data/

@@ -27,3 +27,14 @@ class Direction(enum.Enum):
     down = 2
     left = 3
     right = 4
+
+
+def get_direction_number(direction):
+    if direction == Direction.up:
+        return 1
+    elif direction == Direction.down:
+        return 2
+    elif direction == Direction.left:
+        return 3
+    else:
+        return 4

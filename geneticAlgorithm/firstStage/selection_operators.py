@@ -23,6 +23,10 @@ def tournament_operator(population, population_percentage=0.3):
     return best_individual
 
 
+last_population = None
+# jezeli populacja ta sama to nie przygotowywuj danych, tylko korzystaj z zapisanych
+
+
 def roulette_operator(population):
     # slownik - { board: (widelki_dol, widelki_gora) }
     population_values = {}
@@ -43,6 +47,7 @@ def roulette_operator(population):
             higher_value = 1
         else:
             higher_value = last_individual_quality + (population_values[key] / overall_sum)
+
         population_values[key] = (value, lower_value, higher_value)
         last_individual_quality = higher_value
         index += 1

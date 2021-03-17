@@ -37,7 +37,7 @@ def search_for_best_solution(population):
 
         if best_quality == best_quality_from_last_population:
             populations_without_change += 1
-            print("No changes -", populations_without_change)
+            print("No changes:", populations_without_change)
         else:
             populations_without_change = 0
         print("Population", population_number, " ", best_quality)
