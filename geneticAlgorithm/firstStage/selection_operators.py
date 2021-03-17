@@ -25,7 +25,6 @@ def tournament_operator(population, population_percentage=0.3):
 
 def roulette_operator(population):
     # slownik - { board: (widelki_dol, widelki_gora) }
-    population_brackets = {}
     population_values = {}
     overall_sum = 0
     for individual in population:
@@ -33,19 +32,28 @@ def roulette_operator(population):
         overall_sum += quality
         population_values[individual] = quality
 
+    population_values = dict(sorted(population_values.items(), key=lambda item: item[1]))
+
     # wartosc poprzedniego + wartosc aktualnego i jakies widelki
     last_individual_quality = 0
-    for individual in population:
+    index = 0
+    for key, value in population_values.items():
         lower_value = last_individual_quality
-        if population.index(individual) == len(population) - 1:
+        if index == len(population) - 1:
             higher_value = 1
         else:
-            higher_value = last_individual_quality + (1 - (population_values[individual] / overall_sum))
-        population_brackets[individual] = (lower_value, higher_value)
+            higher_value = last_individual_quality + (population_values[key] / overall_sum)
+        population_values[key] = (value, lower_value, higher_value)
         last_individual_quality = higher_value
+        index += 1
+
+    sorted_values_list = list(population_values.values())
+    index = len(sorted_values_list) - 1
+    for key, value in population_values.items():
+        population_values[key] = value[0], sorted_values_list[index][1], sorted_values_list[index][2]
+        index -= 1
 
     individual_value = Random().random()
-    for key, value in population_brackets.items():
-        lower_value, higher_value = value
-        if lower_value <= individual_value <= higher_value:
+    for key, value in population_values.items():
+        if value[1] <= individual_value <= value[2]:
             return key
