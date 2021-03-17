@@ -17,6 +17,12 @@ class Path:
             length += segment.length
         return length
 
+    def get_source_point(self):
+        return self.__source_point_x, self.__source_point_y
+
+    def get_destination_point(self):
+        return self.__destination_point_x, self.__destination_point_y
+
     def get_segments(self):
         return self.__segments
 
@@ -27,11 +33,15 @@ class Path:
             current_x = segment.initial_x
             current_y = segment.initial_y
             occupied_fields.append((current_x, current_y))
-            for i in range(0, segment.length - 1):
+            length = segment.length
+            # jezeli nie jest to ostatni segment
+            if segment != self.__segments[len(self.__segments) - 1]:
+                length -= 1
+            for i in range(0, length):
                 if segment.direction == Direction.up:
-                    current_y += 1
-                elif segment.direction == Direction.down:
                     current_y -= 1
+                elif segment.direction == Direction.down:
+                    current_y += 1
                 elif segment.direction == Direction.right:
                     current_x += 1
                 else:

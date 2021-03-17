@@ -14,6 +14,12 @@ class PCBBoard:
         self.__height = height
         self.__paths = []
 
+    def get_width(self):
+        return self.__width
+
+    def get_height(self):
+        return self.__height
+
     def get_total_length(self):
         if len(self.__paths) > 0:
             total_length = 0
@@ -22,6 +28,9 @@ class PCBBoard:
             return total_length
 
         return 0
+
+    def get_paths(self):
+        return self.__paths
 
     def add_connected_points(self, connected_points):
         self.__paths.append(connected_points)
