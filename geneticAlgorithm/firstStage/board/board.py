@@ -1,9 +1,9 @@
 from generator.generator_constants import MIN_BOARD_X, MIN_BOARD_Y
 
-LENGTH_FACTOR = 0.35
-INTERSECTION_FACTOR = 2.5
-SEGMENTS_FACTOR = 0.9
-SEGMENTS_OVER_BOARD_FACTOR = 1.8
+LENGTH_FACTOR = 0.25
+INTERSECTION_FACTOR = 3.6
+SEGMENTS_FACTOR = 0.45
+SEGMENTS_OVER_BOARD_FACTOR = 1.6
 
 
 class PCBBoard:
@@ -79,22 +79,7 @@ class PCBBoard:
     def __count_segments_amount(self):
         segments_amount = 0
         for path in self.__paths:
-            last_field = None
-            current_segment_is_vertical = False
-            for occupied_field in path.get_occupied_fields():
-                if last_field is None:
-                    segments_amount += 1
-                # x ten sam - horyzontalny
-                elif last_field[0] == occupied_field[0]:
-                    if current_segment_is_vertical:
-                        current_segment_is_vertical = False
-                        segments_amount += 1
-                # jesli nie horyzontalny to na 100% wertykalny
-                else:
-                    if not current_segment_is_vertical:
-                        current_segment_is_vertical = True
-                        segments_amount += 1
-                last_field = occupied_field
+            segments_amount += len(path.get_segments())
         return segments_amount
 
     def __count_segments_over_board(self):
@@ -105,7 +90,10 @@ class PCBBoard:
             segments = path.get_segments()
             for segment in segments:
                 segment_x_dst, segment_y_dst = segment.get_destination_point()
-                if segment.initial_x < MIN_BOARD_X or segment.initial_y < MIN_BOARD_Y or segment_x_dst > self.__width or segment_y_dst > self.__height:
+                if segment.initial_x < MIN_BOARD_X or segment.initial_y < MIN_BOARD_Y \
+                        or segment_x_dst < MIN_BOARD_X or segment_y_dst < MIN_BOARD_Y\
+                        or segment.initial_x > self.__width or segment.initial_y > self.__height\
+                        or segment_x_dst > self.__width or segment_y_dst > self.__height:
                     segments_over_board += 1
 
         return segments_over_board

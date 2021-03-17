@@ -2,7 +2,7 @@ from random import Random
 
 from generator.random_generator import create_random_path
 
-COMPLETE_MUTATION_PROBABILITY = 0.05
+COMPLETE_MUTATION_PROBABILITY = 0.08
 
 
 def mutation_operator(board, small_mutation_probability=0.37):

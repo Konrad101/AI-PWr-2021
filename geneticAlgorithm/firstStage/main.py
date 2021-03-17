@@ -5,11 +5,11 @@ from genetic_algorithm import search_for_best_solution
 from mutation import mutation_operator
 from selection_operators import tournament_operator, roulette_operator
 
-DATA_PATH = "data/zad3.txt"
+DATA_PATH = "data/zad1.txt"
 
 
 def main():
-    population_size = 10
+    population_size = 20
     width, height, points = get_file_data(DATA_PATH)
 
     population = generate_random_population(population_size, width, height, points)

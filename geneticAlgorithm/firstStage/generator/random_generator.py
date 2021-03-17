@@ -17,7 +17,7 @@ def generate_random_population(population_size, board_width, board_height, board
     return random_population
 
 
-# generowanie sciezki poza mapa?
+# generowanie sciezki poza mapa
 def create_random_path(points, board_width, board_height):
     path_segments = []
 
