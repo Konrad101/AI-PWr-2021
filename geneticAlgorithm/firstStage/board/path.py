@@ -26,6 +26,9 @@ class Path:
     def get_segments(self):
         return self.__segments
 
+    def set_segments(self, segments):
+        self.__segments = segments
+
     def get_occupied_fields(self):
         occupied_fields = []
         for segment in self.__segments:

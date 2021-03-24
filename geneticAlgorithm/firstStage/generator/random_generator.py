@@ -11,14 +11,14 @@ def generate_random_population(population_size, board_width, board_height, board
     for i in range(population_size):
         board = PCBBoard(board_width, board_height)
         for points in board_points:
-            points_pair = create_random_path(points, board_width, board_height)
+            points_pair = create_random_path(points, board_width, board_height, correction_probability=0.05)
             board.add_connected_points(points_pair)
         random_population.append(board)
     return random_population
 
 
 # generowanie sciezki poza mapa
-def create_random_path(points, board_width, board_height):
+def create_random_path(points, board_width, board_height, correction_probability=0.1):
     path_segments = []
 
     completed_path = False
@@ -30,7 +30,10 @@ def create_random_path(points, board_width, board_height):
     while not completed_path:
         # losuj kierunek
         # sprawdz czy w tym kierunku mozna cos dodac
-        direction = get_random_direction(board_width, board_height, current_x, current_y)
+        if Random().random() < correction_probability:
+            direction = get_correct_direction(current_x, current_y, points[2], points[3])
+        else:
+            direction = get_random_direction(board_width, board_height, current_x, current_y)
 
         # kierunek jest ustawiony, teraz tworze albo zwiekszam segment
         if direction != last_direction:
@@ -68,6 +71,21 @@ def get_random_direction(board_width, board_height, current_x, current_y):
     return direction
 
 
+def get_correct_direction(current_x, current_y, dst_x, dst_y):
+    if __count_distance(current_x, dst_x) > __count_distance(current_x + 1, dst_x):
+        return Direction.right
+    elif __count_distance(current_x, dst_x) > __count_distance(current_x - 1, dst_x):
+        return Direction.left
+    elif __count_distance(current_y, dst_y) > __count_distance(current_y + 1, dst_y):
+        return Direction.down
+
+    return Direction.up
+
+
+def __count_distance(first_coordinate, second_coordinate):
+    return abs(first_coordinate - second_coordinate)
+
+
 def reached_finish(dst_x, dst_y, segment):
     reached = False
     if segment.direction == Direction.up and segment.initial_x == dst_x:
@@ -83,20 +101,6 @@ def reached_finish(dst_x, dst_y, segment):
         if segment.initial_x + segment.length == dst_x:
             reached = True
 
-    '''if segment.direction == Direction.up or segment.direction == Direction.down:
-        s_x = segment.initial_x
-        if segment.direction == Direction.up:
-            s_y = segment.initial_y - segment.length
-        else:
-            s_y = segment.initial_y + segment.length
-    else:
-        s_y = segment.initial_y
-        if segment.direction == Direction.left:
-            s_x = segment.initial_x - segment.length
-        else:
-            s_x = segment.initial_x + segment.length
-
-    print("(", dst_x, ", ", dst_y, ") == (", s_x, ", ", s_y, ")", sep='')'''
     return reached
 
 

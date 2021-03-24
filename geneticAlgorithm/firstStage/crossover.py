@@ -1,4 +1,5 @@
 from copy import copy
+from random import Random
 
 from board.board import PCBBoard
 
@@ -8,8 +9,9 @@ def crossover_operator(first_parent, second_parent):
     second_parent_paths = second_parent.get_paths()
 
     child_paths = []
+    crossover_modulo = Random().randint(2, 5)
     for i in range(0, len(first_parent_paths)):
-        if i % 2 == 0:
+        if i % crossover_modulo == 0:
             child_paths.append(copy(first_parent_paths[i]))
         else:
             child_paths.append(copy(second_parent_paths[i]))

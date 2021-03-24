@@ -1,9 +1,11 @@
+import time
+
 from generator.generator_constants import MIN_BOARD_X, MIN_BOARD_Y
 
-LENGTH_FACTOR = 0.25
-INTERSECTION_FACTOR = 3.6
-SEGMENTS_FACTOR = 0.45
-SEGMENTS_OVER_BOARD_FACTOR = 1.6
+LENGTH_FACTOR = 0.24
+INTERSECTION_FACTOR = 5.4
+SEGMENTS_FACTOR = 1.85
+SEGMENTS_OVER_BOARD_FACTOR = 4.2
 
 
 class PCBBoard:
@@ -37,9 +39,9 @@ class PCBBoard:
 
     def evaluate_board(self, print_info=True):
         length = self.get_total_length()
-        intersections_amount = self.__get_intersections_amount()
+        intersections_amount = self.get_intersections_amount()
         segments_amount = self.__count_segments_amount()
-        segments_over_board_amount = self.__count_segments_over_board()
+        segments_over_board_amount = self.count_segments_over_board()
 
         if print_info:
             print("Length:", length)
@@ -56,23 +58,19 @@ class PCBBoard:
 
         return quality
 
-    def __get_intersections_amount(self):
+    def get_intersections_amount(self):
         occupied_points = {}
+        intersections_amount = 0
 
         # jesli jest okupowane to dodaje 1
         for points_pair in self.__paths:
             occupied_fields = points_pair.get_occupied_fields()
             for field in occupied_fields:
+                # jezeli jest wiecej polaczen w 1 polu niz 1 to naliczaj przeciecia
                 if (field[0], field[1]) in occupied_points:
-                    occupied_points[(field[0], field[1])] += 1
+                    intersections_amount += 1
                 else:
                     occupied_points[(field[0], field[1])] = 1
-
-        # jezeli jest wiecej polaczen w 1 polu niz 1 to naliczaj przeciecia
-        intersections_amount = 0
-        for key, value in occupied_points.items():
-            if value > 1:
-                intersections_amount += 1
 
         return intersections_amount
 
@@ -82,7 +80,7 @@ class PCBBoard:
             segments_amount += len(path.get_segments())
         return segments_amount
 
-    def __count_segments_over_board(self):
+    def count_segments_over_board(self):
         segments_over_board = 0
 
         # jezeli poczatek segmentu lub koniec jest poza mapa to naliczaj
@@ -99,7 +97,7 @@ class PCBBoard:
         return segments_over_board
 
     def print_board(self):
-        if self.__get_intersections_amount() > 0 or self.__count_segments_over_board() > 0:
+        if self.get_intersections_amount() > 0 or self.count_segments_over_board() > 0:
             return
         board_imitation = []
         for i in range(0, self.__width):

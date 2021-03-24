@@ -2,9 +2,9 @@ from board.segment import get_direction_number
 from generator.random_generator import generate_random_population
 
 
-def save_population_to_file(population_size, board_width, board_height, board_points):
+def save_population_to_file(population_size, board_width, board_height, board_points, filename):
     population = generate_random_population(population_size, board_width, board_height, board_points)
-    f = open("populations/generated_population_" + str(population_size) + ".txt", "w+")
+    f = open("populations/" + filename, "w+")
     for board in population:
         f.write("BOARD\n")
         f.write(str(board_width) + ';' + str(board_height) + '\n')

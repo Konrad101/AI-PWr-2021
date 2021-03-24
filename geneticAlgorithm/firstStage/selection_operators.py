@@ -1,19 +1,16 @@
+import sys
 from random import Random
 
 
-def tournament_operator(population, population_percentage=0.3):
+def tournament_operator(population, population_percentage=0.073):
     n = int(len(population) * population_percentage)
     if n == 0:
         n = 1
 
-    selected_individuals = []
-    while len(selected_individuals) < n:
-        random_individual = population[Random().randint(0, len(population) - 1)]
-        if not selected_individuals.__contains__(random_individual):
-            selected_individuals.append(random_individual)
+    selected_individuals = Random().sample(population, n)
 
     best_individual = population[0]
-    best_quality = population[0].evaluate_board(False)
+    best_quality = sys.maxsize
     for individual in selected_individuals:
         individual_quality = individual.evaluate_board(False)
         if individual_quality < best_quality:
@@ -23,11 +20,29 @@ def tournament_operator(population, population_percentage=0.3):
     return best_individual
 
 
+last_population_values = None
 last_population = None
-# jezeli populacja ta sama to nie przygotowywuj danych, tylko korzystaj z zapisanych
 
 
 def roulette_operator(population):
+    global last_population
+    global last_population_values
+    if last_population is None or last_population != population:
+        population_values = __get_population_values(population)
+    else:
+        population_values = last_population_values
+
+    individual_value = Random().random()
+
+    last_population = population
+    last_population_values = population_values
+
+    for key, value in population_values.items():
+        if value[1] <= individual_value <= value[2]:
+            return key
+
+
+def __get_population_values(population):
     # slownik - { board: (widelki_dol, widelki_gora) }
     population_values = {}
     overall_sum = 0
@@ -58,7 +73,4 @@ def roulette_operator(population):
         population_values[key] = value[0], sorted_values_list[index][1], sorted_values_list[index][2]
         index -= 1
 
-    individual_value = Random().random()
-    for key, value in population_values.items():
-        if value[1] <= individual_value <= value[2]:
-            return key
+    return population_values
