@@ -30,21 +30,21 @@ def create_csp_map_color_problem():
 
 
 def create_csp_einstein_riddle_problem():
-    owners = [Sentence("owner", "Norweg"),
-              Sentence("owner", "Anglik"),
-              Sentence("owner", "Duńczyk"),
+    owners = [Sentence("owner", "Niemiec"),
+              Sentence("owner", "Norweg"),
               Sentence("owner", "Szwed"),
-              Sentence("owner", "Niemiec")]
-    colors = [Sentence("color", "Zielony"),
+              Sentence("owner", "Anglik"),
+              Sentence("owner", "Duńczyk")]
+    colors = [Sentence("color", "Niebieski"),
+              Sentence("color", "Zielony"),
               Sentence("color", "Czerwony"),
               Sentence("color", "Żółty"),
-              Sentence("color", "Niebieski"),
               Sentence("color", "Biały")]
-    drinks = [Sentence("drink", "Piwo"),
+    drinks = [Sentence("drink", "Mleko"),
+              Sentence("drink", "Piwo"),
               Sentence("drink", "Woda"),
               Sentence("drink", "Kawa"),
-              Sentence("drink", "Herbata"),
-              Sentence("drink", "Mleko")]
+              Sentence("drink", "Herbata")]
     smokes = [Sentence("smoke", "Fajka"),
               Sentence("smoke", "Cygaro"),
               Sentence("smoke", "Papierosy light"),
@@ -70,29 +70,32 @@ def create_csp_einstein_riddle_problem():
 
     csp = CSP(variables, domains)
     # zaleznosci znane
+    # ustalaj to inaczej tak, by dostawalo do srodka wartosc i ustawialo assignment
     # Norweg zamieszkuje pierwszy dom
-    domains[owners[0]] = [houses[0]]
+    domains[owners[1]] = [houses[0]]
     # W środkowym domu pija się mleko
-    domains[drinks[4]] = [houses[2]]
+    domains[drinks[0]] = [houses[2]]
     # Norweg mieszka obok niebieskiego domu
-    domains[colors[3]] = [houses[1]]
+    domains[colors[0]] = [houses[1]]
 
     # dwie zaleznosci dotyczace jednego domu
-    csp.append_constraint(RiddleConstraint(owners[1], colors[1]))
-    csp.append_constraint(RiddleConstraint(drinks[3], owners[2]))
-    csp.append_constraint(RiddleConstraint(smokes[1], colors[2]))
-    csp.append_constraint(RiddleConstraint(owners[4], smokes[0]))
+    csp.append_constraint(RiddleConstraint(owners[3], colors[2]))
+    csp.append_constraint(RiddleConstraint(drinks[4], owners[4]))
+    csp.append_constraint(RiddleConstraint(smokes[1], colors[3]))
+    csp.append_constraint(RiddleConstraint(owners[0], smokes[0]))
     csp.append_constraint(RiddleConstraint(smokes[3], animals[3]))
-    csp.append_constraint(RiddleConstraint(owners[3], animals[0]))
-    csp.append_constraint(RiddleConstraint(drinks[2], colors[0]))
+    csp.append_constraint(RiddleConstraint(owners[2], animals[0]))
+    csp.append_constraint(RiddleConstraint(drinks[3], colors[1]))
+    csp.append_constraint(RiddleConstraint(smokes[4], drinks[1]))
 
+    # rybek na pewno nie ma szwed, bo ma psy
     csp.append_constraint(RiddleConstraint(owners[3], animals[4], opposite_sentences=True))
 
     # zaleznosci domow obok siebie
-    csp.append_constraint(RiddleConstraint(colors[0], colors[4], neighbours=True, left_side_neighbour=True))
+    csp.append_constraint(RiddleConstraint(colors[1], colors[4], neighbours=True, left_side_neighbour=True))
     csp.append_constraint(RiddleConstraint(smokes[2], animals[2], neighbours=True))
-    csp.append_constraint(RiddleConstraint(smokes[2], drinks[1], neighbours=True))
-    csp.append_constraint(RiddleConstraint(animals[1], colors[2], neighbours=True))
+    csp.append_constraint(RiddleConstraint(smokes[2], drinks[2], neighbours=True))
+    csp.append_constraint(RiddleConstraint(animals[1], colors[3], neighbours=True))
 
     return csp
 
@@ -110,19 +113,32 @@ def print_csp_einstein_riddle_solution(einstein_riddle_csp):
     solution = einstein_riddle_csp.backtracking_search()
     if solution is not None:
         solution = dict(sorted(solution.items(), key=lambda item: item[1].number))
-        last_house = None
+        solution = dict(sorted(solution.items(), key=lambda item: item[0].type, reverse=True))
+
+        spacing = 22
+        houses = {}
         for k, v in solution.items():
-            if v != last_house:
+            if v not in houses:
+                house_name = "House " + str(v.number)
+                print(f'{house_name:{spacing}}', end="")
+                houses[v] = None
+
+        last_house = None
+        print()
+        for k, v in solution.items():
+            if last_house is not None and last_house.number == len(houses):
                 print()
-            print(k, v)
+            print(f'{k.value:{spacing}}', end="")
             last_house = v
     else:
         print("Solution not found")
 
 
 if __name__ == "__main__":
+    print("Map coloring")
     csp_map_color = create_csp_map_color_problem()
     print_csp_solution(csp_map_color)
 
+    print("\nEinstein riddle")
     csp_einstein_riddle = create_csp_einstein_riddle_problem()
     print_csp_einstein_riddle_solution(csp_einstein_riddle)
