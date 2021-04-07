@@ -30,37 +30,38 @@ def create_csp_map_color_problem():
 
 
 def create_csp_einstein_riddle_problem():
-    variables = [
-        Sentence("owner", "Norweg"),    # 0
-        Sentence("owner", "Anglik"),    # 1
-        Sentence("owner", "Duńczyk"),   # 2
-        Sentence("owner", "Szwed"),     # 3
-        Sentence("owner", "Niemiec"),   # 4
+    owners = [Sentence("owner", "Norweg"),
+              Sentence("owner", "Anglik"),
+              Sentence("owner", "Duńczyk"),
+              Sentence("owner", "Szwed"),
+              Sentence("owner", "Niemiec")]
+    colors = [Sentence("color", "Zielony"),
+              Sentence("color", "Czerwony"),
+              Sentence("color", "Żółty"),
+              Sentence("color", "Niebieski"),
+              Sentence("color", "Biały")]
+    drinks = [Sentence("drink", "Piwo"),
+              Sentence("drink", "Woda"),
+              Sentence("drink", "Kawa"),
+              Sentence("drink", "Herbata"),
+              Sentence("drink", "Mleko")]
+    smokes = [Sentence("smoke", "Fajka"),
+              Sentence("smoke", "Cygaro"),
+              Sentence("smoke", "Papierosy light"),
+              Sentence("smoke", "Papierosy bez filtra"),
+              Sentence("smoke", "Mentolowe")]
+    animals = [Sentence("animals", "Psy"),
+               Sentence("animals", "Konie"),
+               Sentence("animals", "Koty"),
+               Sentence("animals", "Ptaki"),
+               Sentence("animals", "Rybki")]
 
-        Sentence("color", "Zielony"),   # 5
-        Sentence("color", "Czerwony"),  # 6
-        Sentence("color", "Żółty"),     # 7
-        Sentence("color", "Niebieski"), # 8
-        Sentence("color", "Biały"),     # 9
-
-        Sentence("drink", "Piwo"),      # 10
-        Sentence("drink", "Woda"),      # 11
-        Sentence("drink", "Kawa"),      # 12
-        Sentence("drink", "Herbata"),   # 13
-        Sentence("drink", "Mleko"),     # 14
-
-        Sentence("smoke", "Fajka"),     # 15
-        Sentence("smoke", "Cygaro"),    # 16
-        Sentence("smoke", "Papierosy light"),   # 17
-        Sentence("smoke", "Papierosy bez filtra"),  #18
-        Sentence("smoke", "Mentolowe"), #19
-
-        Sentence("animals", "Psy"),     # 20
-        Sentence("animals", "Konie"),   # 21
-        Sentence("animals", "Koty"),    # 22
-        Sentence("animals", "Ptaki"),   # 23
-        Sentence("animals", "Rybki"),   # 24
-    ]
+    variables = []
+    variables += colors
+    variables += smokes
+    variables += drinks
+    variables += owners
+    variables += animals
 
     houses = [House(1), House(2), House(3), House(4), House(5)]
     domains = {}
@@ -68,29 +69,30 @@ def create_csp_einstein_riddle_problem():
         domains[variable] = houses
 
     csp = CSP(variables, domains)
-
     # zaleznosci znane
     # Norweg zamieszkuje pierwszy dom
-    domains[variables[0]] = [houses[0]]
+    domains[owners[0]] = [houses[0]]
     # W środkowym domu pija się mleko
-    domains[variables[14]] = [houses[2]]
+    domains[drinks[4]] = [houses[2]]
     # Norweg mieszka obok niebieskiego domu
-    domains[variables[8]] = [houses[1]]
+    domains[colors[3]] = [houses[1]]
 
     # dwie zaleznosci dotyczace jednego domu
-    csp.append_constraint(RiddleConstraint(variables[1], variables[6]))
-    csp.append_constraint(RiddleConstraint(variables[13], variables[2]))
-    csp.append_constraint(RiddleConstraint(variables[16], variables[7]))
-    csp.append_constraint(RiddleConstraint(variables[4], variables[15]))
-    csp.append_constraint(RiddleConstraint(variables[18], variables[23]))
-    csp.append_constraint(RiddleConstraint(variables[3], variables[20]))
-    csp.append_constraint(RiddleConstraint(variables[12], variables[5]))
+    csp.append_constraint(RiddleConstraint(owners[1], colors[1]))
+    csp.append_constraint(RiddleConstraint(drinks[3], owners[2]))
+    csp.append_constraint(RiddleConstraint(smokes[1], colors[2]))
+    csp.append_constraint(RiddleConstraint(owners[4], smokes[0]))
+    csp.append_constraint(RiddleConstraint(smokes[3], animals[3]))
+    csp.append_constraint(RiddleConstraint(owners[3], animals[0]))
+    csp.append_constraint(RiddleConstraint(drinks[2], colors[0]))
+
+    csp.append_constraint(RiddleConstraint(owners[3], animals[4], opposite_sentences=True))
 
     # zaleznosci domow obok siebie
-    csp.append_constraint(RiddleConstraint(variables[5], variables[9], neighbours=True, left_side_neighbour=True))
-    csp.append_constraint(RiddleConstraint(variables[17], variables[22], neighbours=True))
-    csp.append_constraint(RiddleConstraint(variables[17], variables[11], neighbours=True))
-    csp.append_constraint(RiddleConstraint(variables[21], variables[7], neighbours=True))
+    csp.append_constraint(RiddleConstraint(colors[0], colors[4], neighbours=True, left_side_neighbour=True))
+    csp.append_constraint(RiddleConstraint(smokes[2], animals[2], neighbours=True))
+    csp.append_constraint(RiddleConstraint(smokes[2], drinks[1], neighbours=True))
+    csp.append_constraint(RiddleConstraint(animals[1], colors[2], neighbours=True))
 
     return csp
 
@@ -100,12 +102,27 @@ def print_csp_solution(csp):
     if solution is not None:
         for s in solution:
             print(s, solution[s])
-        # print(solution)
+    else:
+        print("Solution not found")
+
+
+def print_csp_einstein_riddle_solution(einstein_riddle_csp):
+    solution = einstein_riddle_csp.backtracking_search()
+    if solution is not None:
+        solution = dict(sorted(solution.items(), key=lambda item: item[1].number))
+        last_house = None
+        for k, v in solution.items():
+            if v != last_house:
+                print()
+            print(k, v)
+            last_house = v
     else:
         print("Solution not found")
 
 
 if __name__ == "__main__":
-    csp_map_color = create_csp_einstein_riddle_problem()
-    #csp_map_color = create_csp_map_color_problem()
+    csp_map_color = create_csp_map_color_problem()
     print_csp_solution(csp_map_color)
+
+    csp_einstein_riddle = create_csp_einstein_riddle_problem()
+    print_csp_einstein_riddle_solution(csp_einstein_riddle)

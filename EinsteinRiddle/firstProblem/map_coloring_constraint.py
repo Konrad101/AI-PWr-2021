@@ -4,7 +4,7 @@ from algorithm.csp import Constraint
 
 
 class MapColoring(Constraint[str, str]):
-    def __init__(self, first_location: str, second_location: str):
+    def __init__(self, first_location, second_location):
         super().__init__([first_location, second_location])
         self.first_location = first_location
         self.second_location = second_location
