@@ -6,7 +6,8 @@ from secondProblem.sentence import Sentence
 
 
 class RiddleConstraint(Constraint[Sentence, Sentence]):
-    def __init__(self, first_sentence, second_sentence, neighbours=False, left_side_neighbour=None, opposite_sentences=False):
+    def __init__(self, first_sentence, second_sentence, neighbours=False, left_side_neighbour=None,
+                 opposite_sentences=False):
         super().__init__([first_sentence, second_sentence])
         self.first_sentence = first_sentence
         self.second_sentence = second_sentence
@@ -15,9 +16,8 @@ class RiddleConstraint(Constraint[Sentence, Sentence]):
         self.opposite_sentences = opposite_sentences
 
     def satisfied(self, assignment: Dict[Sentence, House]):
-        # jesli sasiedzi to sprawdz czy domy sa obok (numery) ale po co mi to sprawdzac tutaj?
-        # jesli to juz sa przypisane
         if not self.opposite_sentences:
+            # jesli sasiedzi to sprawdz czy domy obok
             if self.neighbours and self.first_sentence in assignment and self.second_sentence in assignment:
                 if self.left_side_neighbour is None:
                     if abs(assignment[self.first_sentence].number - assignment[self.second_sentence].number) != 1:
