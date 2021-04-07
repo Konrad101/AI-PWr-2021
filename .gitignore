@@ -11,3 +11,15 @@ geneticAlgorithm/firstStage/populations/
 
 geneticAlgorithm/firstStage/venv/
 
+
+EinsteinRiddle/venv/
+
+EinsteinRiddle/secondProblem/__pycache__/
+
+EinsteinRiddle/old_files/
+
+EinsteinRiddle/firstProblem/__pycache__/
+
+EinsteinRiddle/.idea/
+
+EinsteinRiddle/algorithm/__pycache__/
