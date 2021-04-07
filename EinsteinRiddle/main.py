@@ -64,70 +64,20 @@ def create_csp_einstein_riddle_problem():
 
     houses = [House(1), House(2), House(3), House(4), House(5)]
     domains = {}
-
-    # "Norweg zamieszkuje pierwszy dom"
-    domains[variables[0]] = [houses[0]]
-    houses[0].owner = "Norweg"
-
-    # "Anglik mieszka w czerwonym domu"
-    domains[variables[1]] = [houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[6]] = [houses[1], houses[2], houses[3], houses[4]]
-
-    # "Zielony dom znajduje się bezpośrednio po lewej stronie domu białego"
-    domains[variables[5]] = [houses[2], houses[3]]
-    domains[variables[9]] = [houses[3], houses[4]]
-
-    # "Duńczyk pija herbatkę"
-    domains[variables[2]] = [houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[13]] = [houses[1], houses[2], houses[3], houses[4]]
-
-    # "Palacz papierosów light mieszka obok hodowcy kotów"
-    domains[variables[17]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[22]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "Mieszkaniec żółtego domu pali cygara"
-    domains[variables[7]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[16]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "Niemiec pali fajkę"
-    domains[variables[4]] = [houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[15]] = [houses[1], houses[2], houses[3], houses[4]]
-
-    # "Mieszkaniec środkowego domu pija mleko"
-    domains[variables[14]] = [houses[2]]
-    houses[2].drink = "Mleko"
-
-    # "Palacz papierosów light ma sąsiada, który pija wodę"
-    domains[variables[17]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[11]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "Palacz papierosów bez filtra hoduje ptaki"
-    domains[variables[18]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[23]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "Szwed hoduje psy"
-    domains[variables[3]] = [houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[20]] = [houses[1], houses[2], houses[3], houses[4]]
-
-    # "Norweg mieszka obok niebieskiego domu"
-    domains[variables[8]] = [houses[1]]
-    houses[1].color = "Niebieski"
-
-    # "Hodowca koni mieszka obok żółtego domu"
-    domains[variables[21]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[7]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "Palacz mentolowych pija piwo"
-    domains[variables[19]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[10]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    # "W zielonym domu pija się kawę"
-    domains[variables[5]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-    domains[variables[12]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
-
-    domains[variables[24]] = [houses[0], houses[1], houses[2], houses[3], houses[4]]
+    for variable in variables:
+        domains[variable] = houses
 
     csp = CSP(variables, domains)
+
+    # zaleznosci znane
+    # Norweg zamieszkuje pierwszy dom
+    domains[variables[0]] = [houses[0]]
+    # W środkowym domu pija się mleko
+    domains[variables[14]] = [houses[2]]
+    # Norweg mieszka obok niebieskiego domu
+    domains[variables[8]] = [houses[1]]
+
+    # dwie zaleznosci dotyczace jednego domu
     csp.append_constraint(RiddleConstraint(variables[1], variables[6]))
     csp.append_constraint(RiddleConstraint(variables[13], variables[2]))
     csp.append_constraint(RiddleConstraint(variables[16], variables[7]))
@@ -135,6 +85,12 @@ def create_csp_einstein_riddle_problem():
     csp.append_constraint(RiddleConstraint(variables[18], variables[23]))
     csp.append_constraint(RiddleConstraint(variables[3], variables[20]))
     csp.append_constraint(RiddleConstraint(variables[12], variables[5]))
+
+    # zaleznosci domow obok siebie
+    csp.append_constraint(RiddleConstraint(variables[5], variables[9], neighbours=True, left_side_neighbour=True))
+    csp.append_constraint(RiddleConstraint(variables[17], variables[22], neighbours=True))
+    csp.append_constraint(RiddleConstraint(variables[17], variables[11], neighbours=True))
+    csp.append_constraint(RiddleConstraint(variables[21], variables[7], neighbours=True))
 
     return csp
 
