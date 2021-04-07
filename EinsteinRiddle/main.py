@@ -57,11 +57,11 @@ def create_csp_einstein_riddle_problem():
                Sentence("animals", "Rybki")]
 
     variables = []
-    variables += colors
-    variables += smokes
     variables += drinks
     variables += owners
     variables += animals
+    variables += colors
+    variables += smokes
 
     houses = [House(1), House(2), House(3), House(4), House(5)]
     domains = {}
@@ -69,8 +69,6 @@ def create_csp_einstein_riddle_problem():
         domains[variable] = houses
 
     csp = CSP(variables, domains)
-    # zaleznosci znane
-    # ustalaj to inaczej tak, by dostawalo do srodka wartosc i ustawialo assignment
     # Norweg zamieszkuje pierwszy dom
     domains[owners[1]] = [houses[0]]
     # W środkowym domu pija się mleko
@@ -87,9 +85,6 @@ def create_csp_einstein_riddle_problem():
     csp.append_constraint(RiddleConstraint(owners[2], animals[0]))
     csp.append_constraint(RiddleConstraint(drinks[3], colors[1]))
     csp.append_constraint(RiddleConstraint(smokes[4], drinks[1]))
-
-    # rybek na pewno nie ma szwed, bo ma psy
-    csp.append_constraint(RiddleConstraint(owners[3], animals[4], opposite_sentences=True))
 
     # zaleznosci domow obok siebie
     csp.append_constraint(RiddleConstraint(colors[1], colors[4], neighbours=True, left_side_neighbour=True))

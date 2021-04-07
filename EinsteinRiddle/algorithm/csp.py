@@ -5,6 +5,8 @@ V = TypeVar('V')
 D = TypeVar('D')
 
 
+# algorytm zaimplementowany w oparciu o źródło:
+# https://freecontent.manning.com/constraint-satisfaction-problems-in-python
 class Constraint(Generic[V, D], ABC):
     def __init__(self, variables):
         self.variables = variables
@@ -41,15 +43,20 @@ class CSP(Generic[V, D]):
         if assignment is None:
             assignment = {}
 
+        # koniec rekursji, gdy kazda zmienna ma przypisana wartosc
         if len(assignment) == len(self.variables):
             return assignment
 
         unassigned: List[V] = [v for v in self.variables if v not in assignment]
+        # pierwsza zmienna, ktora nie ma przypisanej wartosci
         first: V = unassigned[0]
 
+        # kazda wartosc z dziedziny wartosci
         for value in self.domains[first]:
             local_assignment = assignment.copy()
+            # do kopii przypisanych dodaje pierwszy nieprzypisany
             local_assignment[first] = value
+            # jezeli wartosc nie przekracza ograniczen
             if self.consistent(first, local_assignment):
                 result = self.backtracking_search(local_assignment)
                 if result is not None:
