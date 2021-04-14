@@ -44,17 +44,15 @@ class CSP(Generic[V, D]):
         if len(assignment) == len(self.variables):
             return assignment
 
-        unassigned: List[V] = [v for v in self.variables if v not in assignment]
-        # pierwsza zmienna, ktora nie ma przypisanej wartosci
-        first: V = unassigned[0]
+        unassigned = self.__next_unassigned_variable(assignment)
 
         # kazda wartosc z dziedziny wartosci
-        for value in self.domains[first]:
+        for value in self.domains[unassigned]:
             local_assignment = assignment.copy()
             # do kopii przypisanych dodaje pierwszy nieprzypisany
-            local_assignment[first] = value
+            local_assignment[unassigned] = value
             # jezeli wartosc nie przekracza ograniczen
-            if self.consistent(first, local_assignment):
+            if self.consistent(unassigned, local_assignment):
                 result = self.backtracking_search(local_assignment)
                 if result is not None:
                     return result
