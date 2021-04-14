@@ -105,8 +105,14 @@ class CSP(Generic[V, D]):
                 neighbors = [neighbor for neighbor in arcs if neighbor.get_x_y()[1] == x]
                 queue = queue + neighbors
 
-    def forward_checking(self, assignment=None):
-        return self.__search_forward_checking(assignment)
+    def forward_checking(self, assignment=None, heuristic="firstUnassigned", heuristic_of_domain="random"):
+        self.__heuristic = heuristic
+        self.__heuristic_of_domain = heuristic_of_domain
+
+        result = None
+        while result is None:
+            result = self.__search_forward_checking(deepcopy(assignment))
+        return result
 
     def __search_forward_checking(self, assignment):
         if assignment is None:
@@ -149,7 +155,8 @@ class CSP(Generic[V, D]):
         random.shuffle(domain)
         return domain
 
-    def __least_used_values(self, domains, assignment):
+    @staticmethod
+    def __least_used_values(domains, assignment):
         values_with_amount = {}
         for d in domains:
             values_with_amount[d] = 0

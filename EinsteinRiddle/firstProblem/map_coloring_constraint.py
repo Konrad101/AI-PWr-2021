@@ -18,4 +18,3 @@ class MapColoring(Constraint[str, str]):
             return True
 
         return assignment[self.first_location] != assignment[self.second_location]
-
