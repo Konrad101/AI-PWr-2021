@@ -13,6 +13,9 @@ class RiddleConstraint(Constraint[Sentence, Sentence]):
         self.neighbours = neighbours
         self.left_side_neighbour = left_side_neighbour
 
+    def get_x_y(self):
+        return self.first_sentence, self.second_sentence
+
     def satisfied(self, assignment: Dict[Sentence, House]):
         # jesli sasiedzi to sprawdza czy sa to domy obok
         if self.neighbours and self.first_sentence in assignment and self.second_sentence in assignment:
