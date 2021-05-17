@@ -3,7 +3,8 @@ import statistics
 from text_analyzer import is_word
 
 WORDS_TO_PRINT_AMOUNT = 10
-ALL_RATINGS = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.]
+MIN_RATING = 0.
+MAX_RATING = 1.
 
 
 def print_least_used_words(counted_reviews_words):
@@ -48,7 +49,7 @@ def print_reviews_statistics(reviews):
 
 
 def print_counted_classes(classes):
-    classes_amount = __initialize_classes_amount()
+    classes_amount = {MIN_RATING: 0, MAX_RATING: 0}
     for review_class in classes:
         if review_class in classes_amount:
             classes_amount[review_class] += 1
@@ -59,10 +60,3 @@ def print_counted_classes(classes):
     print('\nClasses occurrence frequency')
     for review_class_amount in classes_amount.items():
         print(f'{review_class_amount[0]}: {review_class_amount[1]}')
-
-
-def __initialize_classes_amount():
-    classes_amount = {}
-    for rating in ALL_RATINGS:
-        classes_amount[rating] = 0
-    return classes_amount
