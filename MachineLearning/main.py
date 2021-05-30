@@ -4,9 +4,15 @@ from exploratory_analysis import print_least_used_words, print_most_used_words, 
     print_counted_classes
 from text_analyzer import count_reviews_words
 
+AVAILABLE_DATA_DIRECTORIES = ['Dennis+Schwartz', 'James+Berardinelli', 'Scott+Renshaw', 'Steve+Rhodes']
+
 
 def analyze():
-    data_set = get_representation_data('Steve+Rhodes')
+    data_set = []
+    for data_directory in AVAILABLE_DATA_DIRECTORIES:
+        data_set += get_representation_data(data_directory)
+    # get_representation_data('Steve+Rhodes')
+
     reviews = get_reviews_from_data_set(data_set)
 
     counted_words = count_reviews_words(reviews)

@@ -1,6 +1,6 @@
 def get_representation_data(file_extension: str):
     directory_beginning = f'data/{file_extension}'
-    rating_prefix = 'rating'
+    rating_prefix = 'label.4class'
     subj_prefix = 'subj'
     ratings = __get_file_data(f'{directory_beginning}/{rating_prefix}.{file_extension}')
     reviews = __get_file_data(f'{directory_beginning}/{subj_prefix}.{file_extension}')

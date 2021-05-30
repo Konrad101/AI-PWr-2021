@@ -42,10 +42,10 @@ def print_reviews_statistics(reviews):
     min_amount = min(reviews_amount)
     print('\nReviews statistics:')
 
-    print('Average', avg)
-    print('Median', median)
-    print('Max', max_amount)
-    print('Min', min_amount)
+    print('Average:', avg)
+    print('Median:', median)
+    print('Max:', max_amount)
+    print('Min:', min_amount)
 
 
 def print_counted_classes(classes):
