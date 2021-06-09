@@ -1,10 +1,19 @@
 import statistics
 
 from text_analyzer import is_word
+from sklearn.feature_extraction.text import CountVectorizer
 
 WORDS_TO_PRINT_AMOUNT = 10
 MIN_RATING = 0.
 MAX_RATING = 1.
+
+
+def extraction(reviews: list):
+    print('\nFeature extraction:')
+    count_vectorizer = CountVectorizer(analyzer='word', ngram_range=(2, 2))
+    reviews_transform = count_vectorizer.fit_transform(reviews)
+    print(count_vectorizer.get_feature_names())
+    print(reviews_transform.toarray())
 
 
 def print_least_used_words(counted_reviews_words):
