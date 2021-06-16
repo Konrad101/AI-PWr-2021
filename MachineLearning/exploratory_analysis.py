@@ -3,7 +3,7 @@ import statistics
 from text_analyzer import is_word
 from sklearn.feature_extraction.text import CountVectorizer
 
-WORDS_TO_PRINT_AMOUNT = 10
+WORDS_TO_PRINT_AMOUNT = 15
 MIN_RATING = 0.
 MAX_RATING = 1.
 
